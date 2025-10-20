@@ -1,0 +1,16 @@
+body {
+  background: linear-gradient(180deg, #dff6ff, #fff7df);
+  font-family: 'Noto Sans Thai', sans-serif;
+  color: #3c3c1a;
+}
+h1 { color: #ffb400; text-shadow: 0 0 6px rgba(255,200,50,.4); }
+.balloon {
+  position: absolute;
+  width: 20px; height: 30px; border-radius: 50% 50% 45% 45%;
+  background: radial-gradient(circle at 30% 30%, #ffda77, #ffa6c9);
+  animation: float 5s infinite ease-in-out;
+}
+@keyframes float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-200px); opacity: 0; }
+}

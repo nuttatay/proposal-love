@@ -1,0 +1,16 @@
+body {
+  background: linear-gradient(180deg, #d6fff0, #fffbd6);
+  font-family: 'Noto Sans Thai', sans-serif;
+  color: #1a3c2d;
+}
+h1 { color: #33b864; text-shadow: 0 0 8px rgba(51,184,100,.3); }
+.confetti {
+  position: absolute;
+  width: 8px; height: 8px;
+  background: gold;
+  animation: fall 4s infinite linear;
+}
+@keyframes fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(200px) rotate(360deg); opacity: 0; }
+}
