@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ขอเป็นแฟนได้มั้ย 💖</title>
+  <style>
+    :root{
+      --bg1:#fff3f6;
+      --bg2:#ffe7d6;
+      --card:#ffffff;
+      --text:#2c2c2c;
+      --accent:#ff4d7a;
+      --accent-2:#ff9b3d;
+      --shadow: 0 10px 30px rgba(0,0,0,.12);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-rounded, "Segoe UI", system-ui, -apple-system, "Noto Sans Thai", "Noto Sans", sans-serif;
+      color:var(--text);
+      background: radial-gradient(1200px 800px at 80% -20%, var(--bg1), transparent),
+                  radial-gradient(1000px 700px at 0% 120%, var(--bg2), transparent),
+                  linear-gradient(160deg, #fff6fb, #fff0e7);
+      overflow:hidden;
+    }
+
+    /* Floating hearts background */
+    .bg-hearts{
+      position:fixed; inset:0; pointer-events:none; overflow:hidden;
+    }
+    .bg-hearts span{
+      position:absolute; bottom:-10vh;
+      font-size:clamp(14px, 2.2vw, 28px);
+      animation:floatUp var(--dur,10s) linear infinite;
+      opacity:.5;
+      filter: blur(0.2px);
+    }
+    @keyframes floatUp{
+      0%{ transform: translateY(0) translateX(0) rotate(0deg); opacity:.2 }
+      60%{ opacity:.6 }
+      100%{ transform: translateY(-120vh) translateX(var(--drift, 0px)) rotate(20deg); opacity:0 }
+    }
+
+    /* Card */
+    .wrap{
+      display:grid; place-items:center; height:100dvh; width:100vw; padding:20px;
+    }
+    .card{
+      position:relative;
+      width:min(560px, 92vw);
+      background:var(--card);
+      border-radius:28px;
+      box-shadow: var(--shadow);
+      padding:28px 24px 26px;
+      text-align:center;
+      overflow:hidden;
+      border:1px solid rgba(255,77,122,.08);
+    }
+    .shine{
+      position:absolute; inset:-1px;
+      background: radial-gradient(600px 120px at 50% -10%, rgba(255,255,255,.55), transparent 60%);
+      pointer-events:none;
+    }
+    h1{
+      margin:12px 0 8px;
+      font-size: clamp(26px, 4.6vw, 38px);
+      line-height:1.1;
+    }
+    p.sub{
+      margin:0 10px 18px;
+      opacity:.8;
+      font-size:clamp(14px, 2.8vw, 16px);
+    }
+
+    /* Cute crab mascot (orange-yellow as requested) */
+    .crab{
+      width:120px; height:120px; margin: 0 auto 6px;
+    }
+    .crab svg{ width:100%; height:100%; display:block; }
+
+    /* Buttons */
+    .btns{
+      position:relative;
+      display:flex; gap:14px; justify-content:center; align-items:center;
+      flex-wrap:wrap;
+    }
+    button{
+      appearance:none; border:0; cursor:pointer;
+      border-radius:999px; padding:14px 22px;
+      font-size:16px; font-weight:700;
+      transition: transform .1s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+      box-shadow: 0 8px 18px rgba(0,0,0,.08);
+    }
+    .yes{
+      background:linear-gradient(180deg, var(--accent), #ff6a93);
+      color:white;
+    }
+    .yes:active{ transform:translateY(1px) scale(.99) }
+    .no{
+      background:#fff3f6; color:#b84a69; border:2px solid #ffc1d3;
+      position:relative;
+    }
+    .no:focus{ outline:none }
+    .tiny{
+      display:block; font-weight:500; opacity:.7; margin-top:10px; font-size:13px;
+    }
+
+    /* Pop hearts on YES */
+    .particles{
+      position:fixed; inset:0; pointer-events:none; overflow:visible;
+    }
+    .particle{
+      position:absolute; width:16px; height:16px; transform:translate(-50%,-50%);
+      animation:pop .8s ease-out forwards;
+    }
+    .particle::before{
+      content:"❤"; display:block; font-size:18px;
+    }
+    @keyframes pop{
+      0%{ opacity:0; transform:translate(-50%,-50%) scale(.4) }
+      20%{ opacity:1 }
+      100%{ opacity:0; transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(.8) rotate(15deg)}
+    }
+
+    /* Modal success */
+    .modal{
+      position:fixed; inset:0; display:grid; place-items:center;
+      background: rgba(0,0,0,.45);
+      opacity:0; pointer-events:none; transition:opacity .25s ease;
+    }
+    .modal.show{ opacity:1; pointer-events:auto }
+    .modal .box{
+      width:min(520px, 92vw); background:white; border-radius:24px; padding:28px;
+      text-align:center; box-shadow:var(--shadow);
+      animation:popIn .2s ease;
+    }
+    @keyframes popIn{
+      from{ transform:scale(.96); opacity:.8 } to{ transform:scale(1); opacity:1 }
+    }
+    .modal h2{ margin:6px 0 6px }
+    .modal p{ margin:0 0 12px }
+    .modal .ok{
+      margin-top:8px;
+      background: linear-gradient(180deg, #41d07f, #25c46a);
+      color:white;
+    }
+
+    /* Mobile tweaks */
+    @media (max-width:420px){
+      .crab{ width:100px; height:100px }
+      .btns{ gap:10px }
+      button{ padding:12px 18px }
+    }
+  </style>
+</head>
+<body>
+  <!-- gentle floating hearts -->
+  <div class="bg-hearts" id="bgHearts"></div>
+
+  <div class="wrap">
+    <main class="card" role="dialog" aria-label="ขอเป็นแฟน">
+      <div class="shine" aria-hidden="true"></div>
+
+      <div class="crab" aria-hidden="true">
+        <!-- Simple orange-yellow crab SVG mascot -->
+        <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#ffb648"/>
+              <stop offset="1" stop-color="#ff8f2e"/>
+            </linearGradient>
+          </defs>
+          <!-- body -->
+          <ellipse cx="64" cy="70" rx="34" ry="26" fill="url(#g)" />
+          <!-- eyes -->
+          <circle cx="50" cy="60" r="6" fill="#fff"/>
+          <circle cx="78" cy="60" r="6" fill="#fff"/>
+          <circle cx="50" cy="60" r="3" fill="#222"/>
+          <circle cx="78" cy="60" r="3" fill="#222"/>
+          <!-- smile -->
+          <path d="M52 76 Q64 84 76 76" stroke="#7a2d00" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <!-- claws -->
+          <path d="M28 60 q-12 -8 -6 -16 q10 4 16 12" fill="#ff9b3d"/>
+          <path d="M100 60 q12 -8 6 -16 q-10 4 -16 12" fill="#ff9b3d"/>
+          <!-- legs -->
+          <g stroke="#ff9b3d" stroke-width="6" stroke-linecap="round">
+            <path d="M44 90 l-8 10" /><path d="M56 94 l-4 12" />
+            <path d="M84 90 l8 10" /><path d="M72 94 l4 12" />
+          </g>
+        </svg>
+      </div>
+
+      <h1>จะเป็นแฟนกับเรามั้ย? 💖</h1>
+      <p class="sub">รับรองดูแลอย่างดี ส่งมุขทุกวัน และมีหัวใจให้ไม่อั้น (พร้อมปูส้มสุดคิ้วท์ 🦀)</p>
+
+      <div class="btns">
+        <button class="yes" id="yesBtn" aria-label="ตกลง เป็นแฟนกัน">ตกลง 💘</button>
+        <button class="no" id="noBtn" aria-label="ยังไม่แน่ใจ">เอิ่ม..ขอคิดก่อน 😅</button>
+      </div>
+
+      <span class="tiny">ปุ่ม “ขอคิดก่อน” เหมือนจะกดได้ แต่จริง ๆ จะวิ่งหนีนิดหน่อย 🤭</span>
+    </main>
+  </div>
+
+  <!-- particles layer -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="box">
+      <h2>เย้! เราเป็นแฟนกันแล้ว 💞</h2>
+      <p>ขอบคุณที่กดตกลงน้าาา ตั้งแต่นี้ไปจะดูแลให้ดีที่สุดเลย</p>
+      <button class="ok" id="okBtn">โอเค 💚</button>
+    </div>
+  </div>
+
+  <script>
+    // Floating background hearts
+    const bg = document.getElementById('bgHearts');
+    const heartChars = ['❤','♥','💕','💗','💖'];
+    function spawnBgHeart(){
+      const s = document.createElement('span');
+      s.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+      s.style.left = Math.random()*100 + 'vw';
+      s.style.setProperty('--dur', 8 + Math.random()*6 + 's');
+      s.style.setProperty('--drift', (Math.random() * 120 - 60) + 'px');
+      bg.appendChild(s);
+      setTimeout(()=>s.remove(), 14000);
+    }
+    for(let i=0;i<24;i++) setTimeout(spawnBgHeart, i*350);
+    setInterval(spawnBgHeart, 900);
+
+    // Yes button -> particles + modal
+    const yes = document.getElementById('yesBtn');
+    const modal = document.getElementById('modal');
+    const particles = document.getElementById('particles');
+    const okBtn = document.getElementById('okBtn');
+
+    function burst(x,y, n=34){
+      for(let i=0;i<n;i++){
+        const p = document.createElement('span');
+        p.className='particle';
+        const ang = Math.random()*Math.PI*2;
+        const dist = 60 + Math.random()*100;
+        p.style.left = x+'px';
+        p.style.top = y+'px';
+        p.style.setProperty('--tx', Math.cos(ang)*dist + 'px');
+        p.style.setProperty('--ty', Math.sin(ang)*dist + 'px');
+        particles.appendChild(p);
+        setTimeout(()=>p.remove(), 900);
+      }
+    }
+
+    yes.addEventListener('click', (e)=>{
+      const rect = e.target.getBoundingClientRect();
+      const cx = rect.left + rect.width/2;
+      const cy = rect.top + rect.height/2;
+      burst(cx, cy, 44);
+      setTimeout(()=> modal.classList.add('show'), 250);
+    });
+    okBtn.addEventListener('click', ()=> modal.classList.remove('show'));
+
+    // No button runs away (desktop: hover; mobile: touchstart)
+    const no = document.getElementById('noBtn');
+    let dodgeCount = 0;
+    function moveNo(){
+      const pad = 16;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const w = no.offsetWidth;
+      const h = no.offsetHeight;
+      const maxX = vw - w - pad;
+      const maxY = vh - h - pad;
+      const nx = Math.max(pad, Math.min(maxX, Math.random()*maxX));
+      const ny = Math.max(pad, Math.min(maxY, Math.random()*maxY));
+      no.style.position='fixed';
+      no.style.left = nx+'px';
+      no.style.top = ny+'px';
+      no.style.transform='translate(0,0)';
+      dodgeCount++;
+      if(dodgeCount%3===0){
+        // tease with a tiny heart particle
+        burst(nx+w/2, ny+h/2, 10);
+      }
+    }
+    const trigger = () => moveNo();
+    no.addEventListener('mouseenter', trigger);
+    no.addEventListener('focus', trigger);
+    no.addEventListener('touchstart', (e)=>{ e.preventDefault(); trigger(); }, {passive:false});
+
+    // Keyboard accessibility: pressing Enter on Yes also works
+    yes.addEventListener('keyup', (e)=>{ if(e.key==='Enter' || e.key===' ') yes.click(); });
+  </script>
+</body>
+</html>
